@@ -226,7 +226,7 @@ const ProductsManage = ({token}) => {
     <EditProductModal editProductModalRef={editProductModalRef} newEditProductModalRef={newEditProductModalRef} setProductInfo={setProductInfo} productInfo={productInfo} putProductsData={putProductsData}/>
 
     <div className="row my-3 g-4 flex-wrap">
-      <div className="col-xxl-8 text-nowrap">
+      <div className="col-xl-8 text-nowrap">
         <h2>產品列表</h2>
         <table className="table">
           <thead>
@@ -279,7 +279,7 @@ const ProductsManage = ({token}) => {
           </tbody>
         </table>
       </div>
-      <div className="col-xxl-4">
+      <div className="col-xl-4">
         <h2>預覽產品</h2>
         {
           productDetail?(
