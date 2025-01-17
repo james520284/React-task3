@@ -95,7 +95,7 @@ const ProductsManage = ({token}) => {
   // 取得產品列表 API
   const [productsData,setProductsData] = useState([]);
   const [productDetail,setProductDetail] = useState(null);
-  console.log(productDetail);
+
   
   
   const getProductsData = async() => {
