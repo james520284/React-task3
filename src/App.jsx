@@ -102,6 +102,7 @@ const ProductsManage = ({token}) => {
     try {
       const res = await axios.get(`${baseUrl}/api/${apiPath}/admin/products/all`);
       setProductsData(Object.values(res.data.products));
+      setProductDetail();
     } catch (err) {
       console.log(err.response?.data?.message);
     }
@@ -177,21 +178,20 @@ const ProductsManage = ({token}) => {
   const editProductModalRef = useRef(null);
   const newEditProductModalRef = useRef(null);
   const openEditProductModal = (product) => {
+    
     newEditProductModalRef.current.show();
-    const imagesUrlFilter = product.imagesUrl.filter(img => img !=='');
-    const productFilter = {...product,imagesUrl:imagesUrlFilter};
     setProductInfo({
-      id:productFilter.id,
-      title:productFilter.title,
-      category:productFilter.category,
-      origin_price:productFilter.origin_price,
-      price:productFilter.price,
-      unit:productFilter.unit,
-      description:productFilter.description,
-      content:productFilter.content,
-      is_enabled: productFilter.is_enabled,
-      imageUrl:productFilter.imageUrl,
-      imagesUrl:productFilter.imagesUrl,
+      id:product.id,
+      title:product.title,
+      category:product.category,
+      origin_price:product.origin_price,
+      price:product.price,
+      unit:product.unit,
+      description:product.description,
+      content:product.content,
+      is_enabled: product.is_enabled,
+      imageUrl:product.imageUrl,
+      imagesUrl:product.imagesUrl,
     });
   };
   useEffect(()=>{
@@ -315,8 +315,9 @@ const Card = ({productDetail}) => {
       <h5>更多圖片</h5>
       <div className="row g-4">
         {
+          imagesUrl&&
           imagesUrl
-          .filter(img=>img !==null)
+          .filter(img=>img!=='')
           .map((img,index)=>
             <div className="col-6" key={index}>
               <div className="img-wrap">
@@ -352,7 +353,7 @@ const Loading = () => {
 // 新增產品資料元件
 const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,setProductInfo,postProductData} ) => {
   
-  const {title,category,origin_price,price,unit,description,content,is_enabled,imageUrl} = productInfo;
+  const {title,category,origin_price,price,unit,description,content,is_enabled,imageUrl,imagesUrl} = productInfo;
   
   const handleProductInfoInput = (e) => {
     const {name,value,type,checked} = e.target;
@@ -422,11 +423,13 @@ const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,s
                   }
                 </div>
                 {
-                  imageUrl !==''&& productInfo.imagesUrl.length ==0 &&
+                  imageUrl !==''&&
                 (<button type="button" className='btn btn-outline-success w-100 mt-2' onClick={addNewImg}>新增副圖</button>)
                 }
                 
+                
                 {
+                  imagesUrl&&
                   (productInfo.imagesUrl.map((img,index)=>
                     <div key={index} className='my-4'>
                       <input
@@ -579,7 +582,7 @@ const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,s
 // 編輯產品資料元件
 const EditProductModal =({editProductModalRef,newEditProductModalRef,setProductInfo,productInfo,putProductsData}) => {
 
-  const {title,category,origin_price,price,unit,description,content,is_enabled,imageUrl,id} = productInfo;
+  const {title,category,origin_price,price,unit,description,content,is_enabled,imageUrl,imagesUrl,id} = productInfo;
   
   const closeEditProductModal = () => {
     newEditProductModalRef.current.hide();
@@ -593,10 +596,15 @@ const EditProductModal =({editProductModalRef,newEditProductModalRef,setProductI
   };
 
   const addNewImg = () => {
-    setProductInfo(prev => ({
-      ...prev,
-      imagesUrl:[...prev.imagesUrl,''],
-    }));
+    
+    setProductInfo(prev => {
+      if (prev.imagesUrl) {
+        return {...prev,imagesUrl:[...prev.imagesUrl,'']}
+      }else{
+        return {...prev,imagesUrl:['']}
+      }
+    }
+  );
     
   };
 
@@ -613,9 +621,8 @@ const EditProductModal =({editProductModalRef,newEditProductModalRef,setProductI
     setProductInfo(prev => {
       const newImgArr = [...prev.imagesUrl];
       newImgArr[index]=value;
-      return {...productInfo,imagesUrl:newImgArr}
+      return {...prev,imagesUrl:newImgArr}
     });
-
   };
   
   
@@ -650,11 +657,12 @@ const EditProductModal =({editProductModalRef,newEditProductModalRef,setProductI
                 }
               </div>
               {
-                imageUrl !==''&& productInfo.imagesUrl.length ==0 &&
+                imageUrl !==''&&
               (<button type="button" className='btn btn-outline-success w-100 mt-2' onClick={addNewImg}>新增副圖</button>)
               }
               
               {
+                imagesUrl&&
                 (productInfo.imagesUrl.map((img,index)=>
                   <div key={index} className='my-4'>
                     <input
