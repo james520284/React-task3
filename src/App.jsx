@@ -132,8 +132,8 @@ const ProductsManage = ({token}) => {
     setProductInfo({
       title:"",
       category:"",
-      origin_price:0,
-      price:0,
+      origin_price:"",
+      price:"",
       unit:"",
       description:"",
       content:"",
@@ -150,7 +150,11 @@ const ProductsManage = ({token}) => {
 
   const postProductData = async () => {
     const updateData = {
-      data:productInfo
+      data:{
+        ...productInfo,
+        origin_price: Number(productInfo.origin_price),
+        price: Number(productInfo.price),
+      }
     };
     
     try {
@@ -201,7 +205,11 @@ const ProductsManage = ({token}) => {
   
   const putProductsData = async (id) => {
     const updateData = {
-      data:productInfo
+      data:{
+        ...productInfo,
+        origin_price: Number(productInfo.origin_price),
+        price: Number(productInfo.price),
+      }
     };
     try {
       const res = await axios.put(`${baseUrl}/api/${apiPath}/admin/product/${id}`,updateData);
@@ -359,7 +367,7 @@ const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,s
     const {name,value,type,checked} = e.target;
     setProductInfo(prev => ({
       ...prev,
-      [name]: type==='checkbox'? checked : (type === 'number'? Number(value):value),
+      [name]: type==='checkbox'?checked : (type === 'number'? (value==='' ?'':Number(value)):value),
     }));
   };
 
@@ -504,7 +512,7 @@ const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,s
                       id='originPriceInput'
                       name='origin_price'
                       className='form-control'
-                      placeholder='請輸入原價'
+                      placeholder="請輸入原價"
                       value={origin_price}
                       onChange={handleProductInfoInput}
                       />
@@ -518,7 +526,7 @@ const AddProductModal = ({addProductModalRef,newAddProductModalRef,productInfo,s
                       id='priceInput'
                       name='price'
                       className='form-control'
-                      placeholder='請輸入售價'
+                      placeholder="請輸入售價"
                       value={price}
                       onChange={handleProductInfoInput}
                       />
